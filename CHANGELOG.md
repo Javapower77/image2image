@@ -2,6 +2,18 @@
 
 All notable changes are documented here.
 
+## [0.3.2] - 2026-09-12
+
+### Fixed
+
+- Rapid AIO load no longer builds the transformer on the meta device, which caused `Cannot copy out of meta tensor; no data!` when moving RoPE caches or enabling CPU offload.
+
+## [0.3.1] - 2026-09-12
+
+### Fixed
+
+- CUDA out-of-memory on Qwen 2511 / Rapid AIO: model CPU offload, VAE tiling, sequential batch images, allocator `expandable_segments`, and Rapid AIO no longer loads two transformers.
+
 ## [0.3.0] - 2026-09-12
 
 ### Added

@@ -22,7 +22,15 @@ Confirm the file is a LoRA for the selected family (Qwen/FireRed vs FLUX.2 Klein
 
 ## CUDA out of memory
 
-Click **Unload model**, keep queue concurrency at one, reduce output dimensions/count, and close other GPU workloads. H100 80 GB should run each listed BF16 model independently, but loading two pipelines at once is intentionally prevented.
+Qwen 2511 and Rapid AIO keep a large transformer in VRAM during denoising. The studio now offloads the text encoder and VAE when they are idle, tiles VAE encode/decode, and generates batch images one at a time.
+
+If you still see `torch.OutOfMemoryError`:
+
+1. Click **Unload model** and retry.
+2. Keep **count** at 1 and start at 1024×1024 or smaller.
+3. Close other GPU processes (`nvidia-smi`).
+4. Restart the app so the CUDA allocator can use `expandable_segments`.
+5. Rapid AIO must not load the official 2511 transformer at the same time; restart after updating if an older process is still running.
 
 ## Identity changes
 

@@ -32,6 +32,7 @@ class Settings(BaseSettings):
         os.environ.setdefault("TRANSFORMERS_CACHE", str((self.hf_home / "transformers").resolve()))
         os.environ.setdefault("HF_HUB_ENABLE_HF_TRANSFER", "1")
         os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+        os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
 
 settings = Settings()

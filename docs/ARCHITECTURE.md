@@ -18,7 +18,7 @@ flowchart LR
 
 ## Memory policy
 
-Adapters load lazily. Selecting a different model unloads the previous pipeline, clears the CUDA allocator, and then loads the next one. Queue concurrency defaults to one. Restoration is separately lazy-loaded. LoRAs are stored on disk and injected only into the active pipeline; changing LoRA selection unloads the previous adapters before loading the new set.
+Adapters load lazily. Selecting a different model unloads the previous pipeline, garbage-collects, and clears the CUDA allocator before loading the next one. Queue concurrency defaults to one. Qwen-family and Klein pipelines use model CPU offload (`text_encoder -> transformer -> vae`) plus VAE tiling so the 7B vision encoder is not resident during denoising. Restoration is separately lazy-loaded and GPU cache is released before GFPGAN runs. LoRAs are stored on disk and injected only into the active pipeline; changing LoRA selection unloads the previous adapters before loading the new set.
 
 ## LoRA library
 

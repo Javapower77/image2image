@@ -8,7 +8,7 @@
 | FLUX.2 [klein] 4B | `black-forest-labs/FLUX.2-klein-4B` | 4 | 1 | multi-reference | Fast distilled Apache-2.0 model. |
 | FLUX.2 [klein] 9B | `black-forest-labs/FLUX.2-klein-9B` | 4 | 1 | multi-reference | Gated, non-commercial, roughly 29 GB VRAM. |
 
-All models load in BF16 and from local Safetensors snapshots. The current Diffusers source build is required because these pipeline classes are newer than many stable releases.
+All models load in BF16 and from local Safetensors snapshots. Pipelines use model CPU offload and VAE tiling so the text encoder is not kept on the GPU during denoising. The current Diffusers source build is required because these pipeline classes are newer than many stable releases.
 
 Rapid AIO is a single ComfyUI checkpoint (`Qwen-Rapid-AIO.safetensors`). The studio keeps the official Qwen 2511 tokenizer, text encoder, VAE, and scheduler, and swaps in the AIO transformer. Download it with `python scripts/download_models.py qwen-2511 qwen-2511-aio` (the official 2511 snapshot is required). A 100 KB HTML file in that folder is a failed Hugging Face page save, not weights. Defaults are 4 steps because the merge is Lightning-distilled; raising steps toward 8 is sometimes useful, but 40-step Qwen settings are the wrong starting point.
 

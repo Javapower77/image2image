@@ -11,6 +11,7 @@ from PIL import PngImagePlugin
 from photo_edit_studio.config import settings
 from photo_edit_studio.image_utils import composite_with_mask, normalize_image
 from photo_edit_studio.models import MODEL_SPECS, model_manager
+from photo_edit_studio.models.memory import release_cuda
 from photo_edit_studio.restoration import restore_faces
 from photo_edit_studio.types import GenerationRequest, GenerationResult
 
@@ -33,8 +34,10 @@ def generate(
         images = [composite_with_mask(request.images[0], image, request.mask) for image in images]
         notes.append("Mask composited after generation; white areas contain the edit.")
     if restoration != "Off":
+        release_cuda()
         images = [restore_faces(image, restoration, restore_weight) for image in images]
         notes.append(f"Applied {restoration} post-processing.")
+        release_cuda()
     if request.loras:
         notes.append(
             "LoRAs: " + ", ".join(f"{spec.name}@{spec.weight:g}" for spec in request.loras)
