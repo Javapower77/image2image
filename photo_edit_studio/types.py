@@ -31,6 +31,9 @@ class GenerationRequest:
     seed: int
     count: int = 1
     preserve_identity: bool = True
+    size_multiplier: int = 1
+    compose: bool = False
+    output_resolution: str = "1K"
     loras: list[LoraSpec] = field(default_factory=list)
 
 

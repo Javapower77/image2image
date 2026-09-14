@@ -1,5 +1,15 @@
 # Editing guide
 
+## Output size
+
+In **Edit source**, width and height follow the source photo. Choose ×1, ×2, or ×3; results stay in aspect and are aligned to 64 px (longer side 512–2048).
+
+In **Combine images**, pick a canvas instead: **1K** (1024×1024), **2K** (2048×2048), or **4K** (4096×4096). Reference image sizes do not set the output resolution.
+
+## Combine images
+
+Switch the workflow to **Combine images**, upload one to three pictures, and write a prompt that names them (`image 1`, `image 2`, `image 3`). This generates a new picture from those references rather than editing a single source in place. Masks are ignored in this mode. Choose 1K, 2K, or 4K for the output canvas; 4K uses more VRAM.
+
 ## Identity-preserving edits
 
 Use a high-resolution source without heavy compression. Add a sharp, front-facing face crop as image 2 when the source face is small. Keep identity preservation enabled and phrase the request as a constrained delta: state the desired change, then list face, pose, body proportions, camera, lighting, and background elements that must stay unchanged.

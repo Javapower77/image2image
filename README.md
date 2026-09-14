@@ -6,7 +6,9 @@ A private, local Gradio studio for high-quality instruction-based photo editing 
 
 - Background, clothing, object, scene, style, and localized edits.
 - Source image plus multiple face/clothing/scene references.
-- Identity-preservation prompt mode, deterministic seeds, CFG, true CFG, steps, strength, dimensions, masks, and batches.
+- Combine up to three images with a prompt into one new picture at 1K, 2K, or 4K.
+- Edit output size follows the source aspect ratio via ×1 / ×2 / ×3.
+- Identity-preservation prompt mode, deterministic seeds, CFG, true CFG, steps, strength, masks, and batches.
 - Optional local GFPGAN post-processing.
 - Upload and apply up to five local LoRAs on the selected base model, each with its own weight.
 - One model in GPU memory at a time; explicit unload control.
@@ -33,13 +35,15 @@ To download every registered snapshot, run `python scripts/download_models.py`. 
 
 ## Recommended editing workflow
 
-1. Put the unmodified photo in **Source photo**.
-2. Optionally add a tight, clean face crop first in **References**, followed by clothing/object references.
-3. Describe only the intended change and explicitly name what must remain unchanged.
-4. Start with the model defaults. Qwen/FireRed generally use 40 steps and true CFG 4; Rapid AIO and distilled FLUX Klein use 4 steps and guidance 1.
-5. Reuse the same seed while tuning the prompt.
-6. Optionally upload LoRAs for the selected model family, choose up to five, and set each weight.
-7. Apply GFPGAN only when facial micro-detail needs correction; low weights reduce identity drift.
+1. Choose **Edit source** or **Combine images**.
+2. For edits, put the unmodified photo in **Source photo**. For combinations, upload up to three images and refer to them as image 1, 2, and 3.
+3. Optionally add a tight, clean face crop first in **References**, followed by clothing/object references.
+4. For edits, pick ×1, ×2, or ×3 to keep the source aspect ratio (max 2048 px). For combinations, pick 1K, 2K, or 4K.
+5. Describe only the intended change and explicitly name what must remain unchanged.
+6. Start with the model defaults. Qwen/FireRed generally use 40 steps and true CFG 4; Rapid AIO and distilled FLUX Klein use 4 steps and guidance 1.
+7. Reuse the same seed while tuning the prompt.
+8. Optionally upload LoRAs for the selected model family, choose up to five, and set each weight.
+9. Apply GFPGAN only when facial micro-detail needs correction; low weights reduce identity drift.
 
 Example instruction:
 

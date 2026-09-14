@@ -14,7 +14,7 @@ Rapid AIO is a single ComfyUI checkpoint (`Qwen-Rapid-AIO.safetensors`). The stu
 
 ## Reference ordering
 
-Image 1 is always the source. Image 2 should be the highest-priority reference—usually a clean face crop for identity-critical work or the target garment for virtual try-on. Later images can supply additional objects or environment cues. Refer to them explicitly as “image 1”, “image 2”, and so on.
+In **Edit source**, image 1 is the photo being changed. Image 2 should be the highest-priority reference—usually a clean face crop for identity-critical work or the target garment for virtual try-on. Later images can supply additional objects or environment cues. In **Combine images**, all three slots are references for a new picture; still refer to them as “image 1”, “image 2”, and “image 3”. Edit output follows image 1's aspect ratio; combine output uses the selected 1K/2K/4K canvas.
 
 ## Parameter behavior
 

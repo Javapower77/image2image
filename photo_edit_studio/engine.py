@@ -9,7 +9,13 @@ from pathlib import Path
 from PIL import PngImagePlugin
 
 from photo_edit_studio.config import settings
-from photo_edit_studio.image_utils import composite_with_mask, normalize_image
+from photo_edit_studio.image_utils import (
+    MAX_OUTPUT_SIDE,
+    combine_output_size,
+    composite_with_mask,
+    normalize_image,
+    scaled_output_size,
+)
 from photo_edit_studio.models import MODEL_SPECS, model_manager
 from photo_edit_studio.models.memory import release_cuda
 from photo_edit_studio.restoration import restore_faces
@@ -20,9 +26,23 @@ def generate(
     request: GenerationRequest, restoration: str, restore_weight: float
 ) -> GenerationResult:
     if not request.images:
+        if request.compose:
+            raise ValueError("Upload 1–3 images to combine.")
         raise ValueError("Upload a source image.")
     spec = MODEL_SPECS[request.model_key]
-    request.images = [normalize_image(image) for image in request.images[: spec.max_images]]
+    if request.compose:
+        request.width, request.height = combine_output_size(request.output_resolution)
+        request.mask = None
+        input_max_side = MAX_OUTPUT_SIDE
+    else:
+        request.width, request.height = scaled_output_size(
+            request.images[0].size, request.size_multiplier
+        )
+        input_max_side = max(request.width, request.height)
+    request.images = [
+        normalize_image(image, max_side=input_max_side)
+        for image in request.images[: spec.max_images]
+    ]
     if request.seed < 0:
         request.seed = secrets.randbelow(2**31 - 1)
 
@@ -30,6 +50,15 @@ def generate(
     adapter = model_manager.get(request.model_key)
     images = adapter.generate(request)
     notes: list[str] = []
+    if request.compose:
+        notes.append(
+            f"Output {request.width}×{request.height} ({request.output_resolution} canvas)."
+        )
+        notes.append(f"Combined {len(request.images)} reference image(s) into one new picture.")
+    else:
+        notes.append(
+            f"Output {request.width}×{request.height} from image-1 aspect ×{request.size_multiplier}."
+        )
     if request.mask is not None:
         images = [composite_with_mask(request.images[0], image, request.mask) for image in images]
         notes.append("Mask composited after generation; white areas contain the edit.")
@@ -58,6 +87,9 @@ def _save(result: GenerationResult, request: GenerationRequest) -> list[Path]:
         "seed": result.seed,
         "width": request.width,
         "height": request.height,
+        "size_multiplier": request.size_multiplier,
+        "compose": request.compose,
+        "output_resolution": request.output_resolution if request.compose else None,
         "steps": request.steps,
         "guidance": request.guidance,
         "true_cfg": request.true_cfg,

@@ -1,6 +1,6 @@
 # Architecture
 
-The Gradio UI builds a `GenerationRequest` and passes it to the engine. The engine normalizes images, requests an adapter from the singleton `ModelManager`, applies any selected LoRAs, runs inference, optionally composites a mask and restores faces, then writes results and non-sensitive metadata.
+The Gradio UI builds a `GenerationRequest` and passes it to the engine. For edits, the engine derives width/height from the first image's aspect ratio and the selected ×1/×2/×3 multiplier. For combine-images mode it uses a 1K/2K/4K square canvas. It then normalizes images, requests an adapter from the singleton `ModelManager`, applies any selected LoRAs, runs inference, optionally composites a mask and restores faces, then writes results and non-sensitive metadata. Combine-images mode treats 1–3 uploads as equal references and skips mask compositing.
 
 ```mermaid
 flowchart LR

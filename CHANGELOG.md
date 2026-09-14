@@ -2,6 +2,31 @@
 
 All notable changes are documented here.
 
+## [0.4.3] - 2026-09-14
+
+### Fixed
+
+- Changing a LoRA weight no longer crashes with `Setting requires_grad=True on inference tensor`. Adapter weights are applied in inference mode, and generation uses `torch.no_grad()` instead of `torch.inference_mode()`.
+
+## [0.4.2] - 2026-09-14
+
+### Fixed
+
+- Combine-images size preview no longer crashes with `needed: 7, got: 6` when some image slots are empty. Hidden Gradio widgets are not used as event inputs.
+
+## [0.4.1] - 2026-09-14
+
+### Changed
+
+- Combine-images output size is now a 1K / 2K / 4K canvas (1024, 2048, or 4096 square). Edit source still uses ×1 / ×2 / ×3 from the source aspect ratio.
+
+## [0.4.0] - 2026-09-14
+
+### Added
+
+- Output size now follows the first uploaded image's aspect ratio. Choose ×1, ×2, or ×3 instead of independent width/height sliders (clamped to 512–2048 and aligned to 64 px).
+- Combine-images workflow: upload up to three references and a prompt to generate one new picture. Image 1 still sets the aspect ratio.
+
 ## [0.3.2] - 2026-09-12
 
 ### Fixed
